@@ -16,7 +16,6 @@ const modify = require('./modify.js')
 // config constants
 const host = config.get('host')
 const port = config.get('port') 
-const unixUser = config.get('unixUser')
 const wtpsThreshold = config.get('wtpsThreshold')
 const monitorPeriod = config.get('monitorPeriod')
 const Z = config.get('Z')
@@ -24,7 +23,6 @@ const dbUser = config.get('dbUser')
 const dbPassword = config.get('dbPassword')
 const relations = config.get('relations')
 const defaultDate = new Date(config.get('defaultDate'))
-//const mbtilesDir = config.get('mbtilesDir') 
 const mbtilesDir = config.get('mbtilesDir_day02') //edited 2020-02-12
 const logDir = config.get('logDir')
 const propertyBlacklist = config.get('propertyBlacklist')
@@ -57,81 +55,35 @@ let pools = {}
 let productionSpinner = new Spinner()
 let moduleKeysInProgress = []
 
-//// start the monitor //(note: as unixUser account of the PostGIS server is not provided, this part is ommitted.)
-//sar = spawn('ssh', [
-//  '-l', unixUser,
-//  host, `sar -b ${monitorPeriod}`
-//], { stdio: ['inherit', 'pipe', 'pipe'] })
-//byline(sar.stdout).on('data', line => {
-//  wtps =
-//    line.toString().split(/\s+/).map(v => Number(v))[4]
-//  if (Number.isNaN(wtps)) return
-//  idle = wtps < wtpsThreshold
-//})
 const isIdle = () => {
   return idle
 }
 
-////This checkExpiretiles (note: as unixUser account of the PostGIS server is not provided, this part is ommitted.)
-//const checkExpiretiles = (date) => {
-//  return new Promise((resolve, reject) => {
-//    const dateKey = date.toISOString().split('T')[0].replace(/-/g, '')
-//    const cat = spawn('ssh', [
-//      '-l', unixUser,
-//      host, `cat /osm_base/expiretiles/${dateKey}/` + '*'
-//    ], { stdio: ['inherit', 'pipe', 'ignore'] })
-//    byline(cat.stdout).on('data', line => {
-//      let zxy = line.toString().split('/').map(v => Number(v))
-//      let Zxy = [6, zxy[1] >> (zxy[0] - Z), zxy[2] >> (zxy[0] - Z)]
-//      let moduleKey = Zxy.join('-')
-//      if (modules.hasOwnProperty(moduleKey) && modules[moduleKey].mtime <= date) {
-//        modules[moduleKey].score += // 'Africa premium'
-//          (Zxy[1] >= 27 && Zxy[1] <= 42 && Zxy[2] >= 24 && Zxy[2] <= 38) ? 10 : 1
-//      }
-//    })
-//    cat.on('exit', () => {
-//      resolve()
-//    })
-//  })
-//}
 
-const getScores = async () => {
+// all scores are zero because we cannot login as unix user
+const getScores = async () => {  
   return new Promise(async (resolve, reject) => {
     // identify modules to update
     let oldestDate = new Date()
-    for (let x = 0; x < 2 ** Z; x++) {
-      for (let y = 0; y < 2 ** Z; y++) {
-        const moduleKey = `${Z}-${x}-${y}`
-        const path = `${mbtilesDir}/${moduleKey}.mbtiles`
-        let mtime = defaultDate
-        let size = 0
-        if (fs.existsSync(path)) {
-          let stat = fs.statSync(path)
-          mtime = stat.mtime
-          size = stat.size
-        }
-        oldestDate = (oldestDate < mtime) ? oldestDate : mtime
-        modules[`${Z}-${x}-${y}`] = {
-          mtime: mtime,
-          size: size,
-         score: 0
-       }
+
+//Replaced loop (based on the list)
+    for (const moduleKey of conversionTilelist) {
+      const path = `${mbtilesDir}/${moduleKey}.mbtiles`
+      let mtime = defaultDate
+      let size = 0
+      if (fs.existsSync(path)) {
+        let stat = fs.statSync(path)
+        mtime = stat.mtime
+        size = stat.size
+      }
+      oldestDate = (oldestDate < mtime) ? oldestDate : mtime
+      modules[moduleKey] = {
+        mtime: mtime,
+        size: size,
+       score: 0
       }
     }
 
-    oldestDate.setUTCHours(0)
-    oldestDate.setUTCMinutes(0)
-    oldestDate.setUTCSeconds(0)
-    oldestDate.setUTCMilliseconds(0)
-
-    const now = new Date()
-    for (let date = oldestDate; date < now; date.setDate(date.getDate() + 1)) {
-      const spinner = new Spinner(`scoring modules by ${date.toISOString().split('T')[0]}`)
-      spinner.start()
-//      await checkExpiretiles(date)
-      spinner.stop()
-      process.stdout.write('\n')
-    }
     resolve()
   })
 }
@@ -190,7 +142,6 @@ const fetch = (client, database, table, downstream) => {
 const dumpAndModify = async (bbox, relation, downstream, moduleKey) => {
   return new Promise((resolve, reject) => {
     const startTime = new Date()
-//    const [database, table] = relation.split('::')
     const [database, schema, table] = relation.split('::')
     if (!pools[database]) {
       pools[database] = new Pool({
@@ -206,7 +157,6 @@ const dumpAndModify = async (bbox, relation, downstream, moduleKey) => {
       let sql = `
 SELECT column_name FROM information_schema.columns 
  WHERE table_name='${table}' AND table_schema='${schema}' ORDER BY ordinal_position`
-
       let cols = await client.query(sql)
       cols = cols.rows.map(r => r.column_name).filter(r => r !== 'geom')
       cols = cols.filter(v => !propertyBlacklist.includes(v))
@@ -251,10 +201,6 @@ const queue = new Queue(async (t, cb) => {
   const tmpPath = `${mbtilesDir}/part-${moduleKey}.mbtiles`
   const dstPath = `${mbtilesDir}/${moduleKey}.mbtiles`
 
-/// TEMP
-//if (fs.existsSync(dstPath)) return cb()
-
-  // console.log(`[${queueStats.total + 1}/${queueStats.peak}] process ${moduleKey} (score: ${modules[moduleKey].score}, previous size: ${pretty(modules[moduleKey].size)})`)
   moduleKeysInProgress.push(moduleKey)
   productionSpinner.setSpinnerTitle(moduleKeysInProgress.join(', '))
 
@@ -310,8 +256,8 @@ const queueTasks = () => {
   let moduleKeys = Object.keys(modules)
   moduleKeys.sort((a, b) => modules[b].score - modules[a].score)
 
-for (let moduleKey of conversionTilelist) {
-//  for (let moduleKey of moduleKeys) {
+  for (let moduleKey of moduleKeys) {
+//for (let moduleKey of conversionTilelist) {
 //  for (let moduleKey of ['6-34-30','6-34-31','6-34-32','6-35-30','6-35-31','6-35-32','6-36-30','6-36-31','6-36-32','6-37-30','6-37-31','6-37-32','6-38-30','6-38-31','6-38-32']) { //// TEMP
     //if (modules[moduleKey].score > 0) {
       queue.push({
@@ -326,7 +272,6 @@ const shutdown = () => {
   winston.info(`${iso()}: production system shutdown.`)
   console.log('** production system shutdown! **')
   process.exit(0)
-//  sar.kill()
 }
 
 const main = async () => {
