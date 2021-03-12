@@ -411,7 +411,7 @@ const lut = {
         f.tippecanoe.minzoom = 15
     }
   delete f.properties['class']
-  if (f.properties.ungsc_mission === 'UNMIK') {
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
     delete f
   }
   return f
@@ -445,7 +445,7 @@ const lut = {
     }
     f.properties._source = 't-ap'
     delete f.properties['class']
-  if (f.properties.ungsc_mission === 'UNMIK') {
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
     delete f
   }
     return f 
@@ -467,7 +467,7 @@ const lut = {
     }
   f.properties._source = 'pu-ap'
   delete f.properties['class']
-  if (f.properties.ungsc_mission === 'UNMIK') {
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
     delete f
   }
   return f 
@@ -491,7 +491,7 @@ const lut = {
         f.tippecanoe.minzoom = 14
     }
   delete f.properties['class']
-  if (f.properties.ungsc_mission === 'UNMIK') {
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
     delete f
   }
   return f
@@ -516,6 +516,9 @@ const lut = {
     }
   f.properties._source = 'se-ap'
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f 
 },
   pois_worship_p: f => {
@@ -525,6 +528,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_worship_ap: f => {
@@ -534,6 +540,9 @@ const lut = {
       maxzoom: 15
     }
    delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f
  },
   pois_heritage_p : f => {
@@ -543,6 +552,9 @@ const lut = {
     maxzoom: 15
     }
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_heritage_ap: f => {
@@ -552,6 +564,9 @@ const lut = {
       maxzoom: 15
     }
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f 
 },
   pois_other_p: f => {
@@ -563,8 +578,11 @@ const lut = {
     minzoom: 15,
     maxzoom: 15
     }
-  return f
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
+  return f
   },
   pois_other_ap: f => {
     f.tippecanoe = {
@@ -572,6 +590,10 @@ const lut = {
       minzoom: 15,
       maxzoom: 15
     }
+  delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f 
 },
   pois_traffic_p: f => {
@@ -581,6 +603,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_water_p: f => {
@@ -590,6 +615,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   barriers_all_l: f => {
@@ -640,6 +668,9 @@ const lut = {
       minzoom: 13,
       maxzoom: 15
     }
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f
   }
 }
