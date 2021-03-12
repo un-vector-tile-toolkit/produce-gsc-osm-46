@@ -152,6 +152,9 @@ const lut = {
     delete f.properties['area_km2']
     delete f.properties['length_km']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     delete f.properties['ne_scalerank']
     delete f.properties['ne_name']
@@ -167,6 +170,9 @@ const lut = {
     delete f.properties['class']
     delete f.properties['destination']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -179,6 +185,9 @@ const lut = {
     delete f.properties['class']
     delete f.properties['destination']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -192,6 +201,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -203,6 +215,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -214,6 +229,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -225,6 +243,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -236,6 +257,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
@@ -284,6 +308,9 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
     delete f.properties['ungsc_mission']
     return f
   },
