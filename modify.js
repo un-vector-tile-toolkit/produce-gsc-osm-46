@@ -123,6 +123,7 @@ const lut = {
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
     delete f.properties['ungsc_ctry_name']
+    delete f.properties['ungsc_mission']
     return f
   },
   landuse_naturalmedium_a: f => {
@@ -134,6 +135,7 @@ const lut = {
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
     delete f.properties['ungsc_ctry_name']
+    delete f.properties['ungsc_mission']
     delete f.properties['traction']
     return f
   },
@@ -150,6 +152,10 @@ const lut = {
     delete f.properties['area_km2']
     delete f.properties['length_km']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     delete f.properties['ne_scalerank']
     delete f.properties['ne_name']
     delete f.properties['ne_mission']
@@ -164,6 +170,10 @@ const lut = {
     delete f.properties['class']
     delete f.properties['destination']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   waterways_large_l: f => {
@@ -175,6 +185,10 @@ const lut = {
     delete f.properties['class']
     delete f.properties['destination']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
 
@@ -187,6 +201,10 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   roads_medium_l: f => {
@@ -197,6 +215,10 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   roads_minor_l: f => {
@@ -207,7 +229,11 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
-     return f
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
+    return f
   },
   roads_other_l: f => {
     f.tippecanoe = {
@@ -217,6 +243,10 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   roads_special_l: f => {
@@ -227,6 +257,10 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   // 5. railway
@@ -239,6 +273,7 @@ const lut = {
     delete f.properties['traction']
     delete f.properties['ungsc_ctry']
     delete f.properties['ungsc_ctry_name']
+    delete f.properties['ungsc_mission']
     return f
   },
   // 6. route
@@ -250,6 +285,7 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    delete f.properties['ungsc_mission']
     return f
   },
   // 7. structure
@@ -261,6 +297,7 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    delete f.properties['ungsc_mission']
     return f
   },
   roads_all_a: f => {
@@ -271,6 +308,10 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    if (f.properties.ungsc_mission === 'UNMIK') {
+      f.properties.name = ''
+    }
+    delete f.properties['ungsc_mission']
     return f
   },
   pois_transport_a: f => {
@@ -281,6 +322,7 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    delete f.properties['ungsc_mission']
     return f
   },
   // 8. building
@@ -292,6 +334,7 @@ const lut = {
     }
     delete f.properties['class']
     delete f.properties['ungsc_ctry']
+    delete f.properties['ungsc_mission']
     return f
   },
   buildings_a: f => {
@@ -303,7 +346,8 @@ const lut = {
     delete f.properties['class']
     delete f.properties['z_order']
     delete f.properties['ungsc_ctry']
-     return f
+    delete f.properties['ungsc_mission']
+    return f
   },
   osm_planet_other_buildings: f => {
     f.tippecanoe = {
@@ -315,6 +359,7 @@ const lut = {
     delete f.properties['z_order']
     delete f.properties['tags']
     delete f.properties['ungsc_ctry']
+    delete f.properties['ungsc_mission']
     delete f.properties['shop']
     delete f.properties['craft']
     delete f.properties['sport']
@@ -366,6 +411,9 @@ const lut = {
         f.tippecanoe.minzoom = 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_transport_ap: f => {
@@ -397,6 +445,9 @@ const lut = {
     }
     f.properties._source = 't-ap'
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f 
 },
   pois_public_p: f => {
@@ -416,6 +467,9 @@ const lut = {
     }
   f.properties._source = 'pu-ap'
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f 
 },
   pois_services_p: f => {
@@ -437,6 +491,9 @@ const lut = {
         f.tippecanoe.minzoom = 14
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_services_ap: f => {
@@ -459,6 +516,9 @@ const lut = {
     }
   f.properties._source = 'se-ap'
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f 
 },
   pois_worship_p: f => {
@@ -468,6 +528,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_worship_ap: f => {
@@ -477,6 +540,9 @@ const lut = {
       maxzoom: 15
     }
    delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f
  },
   pois_heritage_p : f => {
@@ -486,6 +552,9 @@ const lut = {
     maxzoom: 15
     }
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_heritage_ap: f => {
@@ -495,6 +564,9 @@ const lut = {
       maxzoom: 15
     }
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f 
 },
   pois_other_p: f => {
@@ -506,8 +578,11 @@ const lut = {
     minzoom: 15,
     maxzoom: 15
     }
-  return f
     delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
+  return f
   },
   pois_other_ap: f => {
     f.tippecanoe = {
@@ -515,6 +590,10 @@ const lut = {
       minzoom: 15,
       maxzoom: 15
     }
+  delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f 
 },
   pois_traffic_p: f => {
@@ -524,6 +603,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   pois_water_p: f => {
@@ -533,6 +615,9 @@ const lut = {
     maxzoom: 15
     }
   delete f.properties['class']
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
   return f
   },
   barriers_all_l: f => {
@@ -583,6 +668,9 @@ const lut = {
       minzoom: 13,
       maxzoom: 15
     }
+  if (f.properties.ungsc_mission === 'UNMIK' || f.properties.status === 'f') {
+    delete f
+  }
     return f
   }
 }
